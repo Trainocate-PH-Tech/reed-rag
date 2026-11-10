@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag"
+version = "0.1.0"
+description = "My RAG System"
+requires-python = ">=3.14"
+dependencies = [
+  "chromadb",
+  "PyYAML",
+  "python-dotenv",
+  "python-docx",
+  "pypdf",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "reportlab",
+]
+gguf = [
+  "llama-cpp-python"
+]
+
+[project.scripts]
+rag = "rag.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "unit: Tests isolated components",
+  "integration: Tests component interactions",
+]

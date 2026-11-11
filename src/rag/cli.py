@@ -5,10 +5,23 @@ from app.operations.process import (
     process_text_file,
     embed_text_file,
 )
+from app.inference.local_inference_model import LocalInferenceProvider
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="rag")
     commands = parser.add_subparsers(dest="command", required=True)
+
+    chat_parser = commands.add_parser("chat")
+
+    chat_parser.add_argument(
+        "--model",
+        type=str
+    )
+
+    chat_parser.add_argument(
+        "--query",
+        type=str
+    )
 
     embed_parser = commands.add_parser("embed")
 
@@ -69,6 +82,20 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "info":
         print("rag: modular ingestion and retrieval system")
         return 0
+    elif args.command == "chat":
+        query = args.query
+        model = args.model
+        
+        inference_provider = LocalInferenceProvider(
+            model_path=model
+        )
+
+        result = inference_provider.infer(query)
+
+        inference_provider.close()
+
+        print(result)
+
     elif args.command == "embed":
         text_file = args.content
         chunk_size = args.chunk_size

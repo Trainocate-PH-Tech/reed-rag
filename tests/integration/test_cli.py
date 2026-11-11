@@ -20,8 +20,10 @@ def test_cli_generates_embeddings(tmp_path, monkeypatch, capsys, write_file):
     ]}
     constructor = Mock(return_value=engine)
     monkeypatch.setitem(sys.modules, "llama_cpp", SimpleNamespace(Llama=constructor))
+
+    # rag embed /home/ralampay/Documents/sample.txt --model gemma.gguf --chunk_size 4 --stride 3 --batch_size 2
     args = ["embed", str(protocol), "--model", str(model),
-            "--chunk-size", "4", "--stride", "3", "--batch-size", "2"]
+            "--chunk_size", "4", "--stride", "3", "--batch_size", "2"]
     output = tmp_path / "output.json"
     if write_file:
         args += ["--output", str(output)]

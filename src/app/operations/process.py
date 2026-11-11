@@ -49,6 +49,7 @@ def embed_text_file(
     return {
         **document, "model": provider.model_name, "dimensions": dimensions,
         "embedded_chunk_count": len(records), "chunks": records,
+        "source": path
     }
 
 def process_content(medium: str, content: str) -> dict:

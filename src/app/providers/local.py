@@ -25,8 +25,6 @@ class LocalEmbeddingProvider(BaseProvider):
             return []
         response = self._model.create_embedding(texts)
         rows = sorted(response["data"], key=lambda row: row["index"])
-        print(rows)
-        print(texts)
         if len(rows) != len(texts):
             raise ValueError("Embedding count mismatch")
 

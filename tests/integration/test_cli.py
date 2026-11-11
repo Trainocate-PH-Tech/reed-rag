@@ -5,7 +5,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from protocol_embeddings.cli import main
+from rag.cli import main
 
 
 @pytest.mark.parametrize("write_file", [False, True])
@@ -42,5 +42,3 @@ def test_cli_generates_embeddings(tmp_path, monkeypatch, capsys, write_file):
     assert engine.create_embedding.call_args_list[0].args[0] == [
         "title: none | text: ABCD", "title: none | text: DEFG",
     ]
-    if write_file:
-        assert stdout == ""

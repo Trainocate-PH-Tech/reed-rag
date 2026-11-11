@@ -1,11 +1,43 @@
 import argparse
 import json
 from pathlib import Path
-from app.operations.process import process_text_file
+from app.operations.process import (
+    process_text_file,
+    embed_text_file,
+)
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="rag")
     commands = parser.add_subparsers(dest="command", required=True)
+
+    embed_parser = commands.add_parser("embed")
+
+    embed_parser.add_argument("content")
+
+    embed_parser.add_argument(
+        "--model",
+        type=str
+    )
+
+    embed_parser.add_argument(
+        "--chunk_size",
+        type=int
+    )
+
+    embed_parser.add_argument(
+        "--stride",
+        type=int
+    )
+
+    embed_parser.add_argument(
+        "--batch_size",
+        type=int
+    )
+
+    embed_parser.add_argument(
+        "--output",
+        type=str
+    )
 
     commands.add_parser("info")
 
@@ -37,6 +69,30 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "info":
         print("rag: modular ingestion and retrieval system")
         return 0
+    elif args.command == "embed":
+        text_file = args.content
+        chunk_size = args.chunk_size
+        stride = args.stride
+        batch_size = args.batch_size
+        output = args.output
+        model = args.model
+
+        result = embed_text_file(
+            text_file,
+            chunk_size,
+            stride,
+            model,
+            batch_size,
+            None
+        )
+
+        serialized = json.dumps(result, indent=2)
+
+        if args.output:
+            Path(args.output).write_text(serialized + "\n", encoding="utf-8")
+        else:
+            print(serialized)
+
     elif args.command == "process":
         if args.medium == "text-file":
             if args.chunk_size is None or args.stride is None:

@@ -3,9 +3,9 @@ from pathlib import Path
 import math
 
 class LocalEmbeddingProvider(BaseProvider):
-    def __init__(self, model_name, context_size=2048, gpu_layers=0):
+    def __init__(self, model_path, context_size=2048, gpu_layers=0):
        
-        path = Path(model_name).expanduser().resolve()
+        path = Path(model_path).expanduser().resolve()
         self.model_name = path.name
         self.context_size = context_size
         self.gpu_layers = gpu_layers
@@ -25,6 +25,8 @@ class LocalEmbeddingProvider(BaseProvider):
             return []
         response = self._model.create_embedding(texts)
         rows = sorted(response["data"], key=lambda row: row["index"])
+        print(rows)
+        print(texts)
         if len(rows) != len(texts):
             raise ValueError("Embedding count mismatch")
 

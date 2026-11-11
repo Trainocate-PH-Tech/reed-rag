@@ -20,7 +20,7 @@ def test_cli_generates_embeddings(tmp_path, monkeypatch, capsys, write_file):
     ]}
     constructor = Mock(return_value=engine)
     monkeypatch.setitem(sys.modules, "llama_cpp", SimpleNamespace(Llama=constructor))
-    args = [str(protocol), "--model", str(model),
+    args = ["embed", str(protocol), "--model", str(model),
             "--chunk-size", "4", "--stride", "3", "--batch-size", "2"]
     output = tmp_path / "output.json"
     if write_file:

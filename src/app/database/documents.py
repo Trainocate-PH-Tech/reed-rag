@@ -6,6 +6,7 @@ from uuid import uuid4
 class Document:
     content: str
     embedding: list[float]
+    content_type: str = ""
     id: str = field(default_factory=lambda: str(uuid4()))
     source_id: str = ""
     storage_key: str = ""
@@ -15,7 +16,9 @@ class Document:
     start: int = 0
     end: int = 0
     embedding_model: str = ""
+    metadata: str = ""
     created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def summary(self):
         values = asdict(self)

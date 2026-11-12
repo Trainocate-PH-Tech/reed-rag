@@ -6,10 +6,14 @@ from app.operations.process import (
     embed_text_file,
 )
 from app.inference.local_inference_model import LocalInferenceProvider
+from app.database.factory import get_database
+from app.database.migrations import migrate
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="rag")
     commands = parser.add_subparsers(dest="command", required=True)
+
+    commands.add_parser("db:create")
 
     chat_parser = commands.add_parser("chat")
 
@@ -119,6 +123,22 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.output).write_text(serialized + "\n", encoding="utf-8")
         else:
             print(serialized)
+
+    elif args.command == "db:create":
+        database = get_database()
+        database.create_database()
+        print("Database initialized")
+
+    elif args.command == "db:migrate":
+        database = get_database()
+        completed = migrate(database)
+
+        if not completed:
+            print("No pending migrations")
+
+        else:
+            for version in completed:
+                print(f"Applied migration: {version}")
 
     elif args.command == "process":
         if args.medium == "text-file":
